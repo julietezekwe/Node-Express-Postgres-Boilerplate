@@ -1,0 +1,9 @@
+{
+    "watch": [
+        "src/",
+        ".env"
+    ],
+    "ignore": ["src/tests/"],
+    "delay": 250,
+    "exec": "yarn dev"
+}

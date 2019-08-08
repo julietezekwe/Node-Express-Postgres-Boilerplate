@@ -1,0 +1,40 @@
+version: '3'
+services:
+  app:
+    container_name: docker-node-postgres
+    restart: always
+    env_file: .env
+    environment:
+      - NODE_ENV=$NODE_ENV
+      - PORT=$PORT
+      - LOG_LABEL=$LOG_LABEL
+      - LOG_LEVEL=$LOG_LEVEL
+      - LOG_FILE=$LOG_FILE
+      - API_PREFIX=$API_PREFIX
+      - DB_NAME=$DB_NAME_DOCKER
+      - DB_HOST=$DB_HOST_DOCKER
+      - DB_PASS=$DB_PASS_DOCKER
+      - DB_USER=$DB_USER_DOCKER
+      - REDIS_HOST=$DOCKER_REDIS_HOST
+      - REDIS_PORT:$REDIS_PORT
+    build: .
+    ports:
+      - '800:8000'
+    links:
+      - postgresDb
+      - redisServer
+  postgresDb:
+    container_name: postgresDb
+    image: "postgres:11"
+    volumes:
+      - my_dbdata:/var/lib/postgresql/data
+    ports:
+      - "54320:5432"
+  redisServer:
+    container_name: redisServer
+    image: redis
+    volumes:
+      - redisServerdata:/data
+volumes:
+  my_dbdata:
+  redisServerdata:
