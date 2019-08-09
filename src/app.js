@@ -3,6 +3,8 @@ import { listModules } from 'awilix';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';
+import fs from 'fs';
+import cronjob from './jobs/cron';
 
 const createApp = ({ logger, container, config }) => {
   const app = express();
@@ -39,6 +41,16 @@ const createApp = ({ logger, container, config }) => {
     });
     next();
   });
+  const clearLog = () => {
+    fs.writeFile('./setup.log', '', (err) => {
+      if (err) throw err;
+      return logger.info('Suucessfully cleared log file');
+    });
+  };
+
+  cronjob('0 0 */24 * * *', clearLog);
+
   return app;
 };
+
 export default createApp;
